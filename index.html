@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[ÜN-Z3bR4-1T]</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #000; min-height: 100vh; color: #f0f0f0; font-family: 'Courier New', monospace; padding: 24px 16px; max-width: 760px; margin: 0 auto; }
+  .stamp { background: #00ff41; color: #000; display: inline-block; font-size: 9px; letter-spacing: 4px; padding: 3px 8px; margin-bottom: 8px; }
+  .title { font-size: 36px; font-weight: 900; line-height: 1; margin-bottom: 6px; color: #00ff41; text-shadow: 0 0 8px #00ff4188; }
+  .sub { font-size: 11px; color: #1a3d1a; margin-bottom: 28px; }
+  .panel-header { background: #050f05; border: 1px solid #0a2a0a; border-bottom: none; padding: 8px 12px; display: flex; justify-content: space-between; }
+  .panel-label { font-size: 9px; letter-spacing: 3px; color: #00ff41; }
+  .char-count { font-size: 9px; color: #1a4a1a; }
+  textarea { width: 100%; height: 120px; background: #050f05; border: 1px solid #0a2a0a; color: #00ff41; font-family: 'Courier New', monospace; font-size: 14px; line-height: 1.7; padding: 14px; resize: none; outline: none; caret-color: #00ff41; }
+  textarea::placeholder { color: #0d2a0d; }
+  textarea:focus { border-color: #00ff41; box-shadow: 0 0 6px #00ff4133; }
+  textarea.out-redacted { background: #000; color: #00ff41; }
+  textarea.out-revealed { background: #000; color: #ccffcc; }
+  .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-bottom: 2px; }
+  .btn-redigir { background: #00ff41; border: none; color: #000; font-family: 'Courier New', monospace; font-weight: 700; font-size: 12px; letter-spacing: 1px; padding: 14px 8px; cursor: pointer; }
+  .btn-redigir:hover { background: #00cc33; }
+  .btn-revelar { background: #000; border: 1px solid #00ff41; color: #00ff41; font-family: 'Courier New', monospace; font-weight: 700; font-size: 12px; letter-spacing: 1px; padding: 14px 8px; cursor: pointer; }
+  .btn-revelar:hover { background: #050f05; }
+  .btn-copy { width: 100%; border: 1px solid #0a2a0a; border-top: none; background: #000; color: #00ff41; font-family: 'Courier New', monospace; font-weight: 700; font-size: 12px; letter-spacing: 2px; padding: 13px; cursor: pointer; transition: all 0.2s; }
+  .btn-copy:hover { background: #050f05; }
+  .out-section { margin-bottom: 2px; display: none; }
+  .status-bar { background: #050f05; border: 1px solid #0a2a0a; padding: 10px 14px; display: flex; align-items: center; gap: 8px; margin-bottom: 24px; margin-top: 2px; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; background: #0d2a0d; }
+  .status-msg { font-size: 11px; color: #1a4a1a; }
+  .how-title { font-size: 9px; letter-spacing: 3px; color: #0d2a0d; margin-bottom: 14px; }
+  .step { background: #050f05; border-left: 2px solid #00ff41; padding: 14px; display: flex; gap: 12px; margin-bottom: 2px; }
+  .step-num { color: #00ff41; font-size: 20px; font-weight: 900; flex-shrink: 0; text-shadow: 0 0 6px #00ff4166; }
+  .step-txt { font-size: 12px; color: #1a4a1a; line-height: 1.6; }
+  .out-label-red { font-size: 9px; letter-spacing: 3px; color: #00ff41; }
+  .out-label-rev { font-size: 9px; letter-spacing: 3px; color: #ccffcc; }
+  .divider { border-top: 1px solid #0a1a0a; padding-top: 20px; }
+</style>
+</head>
+<body>
+
+  <div class="stamp">CLASSIFICADO</div>
+  <div class="title">[ÜN-Z3bR4-1T]</div>
+  <div class="sub">// codificador &amp; decodificador █████</div>
+
+  <div style="margin-bottom:2px">
+    <div class="panel-header">
+      <span class="panel-label">ENTRADA</span>
+      <span class="char-count" id="in-count">0 chars</span>
+    </div>
+    <textarea id="input" placeholder="Digite ou cole o texto aqui..."></textarea>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-redigir" onclick="encode()">█ REDIGIR</button>
+    <button class="btn-revelar" onclick="decode()">▶ REVELAR</button>
+  </div>
+
+  <div class="out-section" id="out-section">
+    <div class="panel-header">
+      <span id="out-label" class="out-label-red">REDIGIDO</span>
+      <span class="char-count" id="out-count">0 chars</span>
+    </div>
+    <textarea id="output" class="out-redacted" readonly></textarea>
+    <button class="btn-copy" id="btn-copy" onclick="copyOutput()">⎘ COPIAR RESULTADO</button>
+  </div>
+
+  <div class="status-bar">
+    <div class="dot" id="dot"></div>
+    <span class="status-msg" id="status-msg">Aguardando...</span>
+  </div>
+
+  <div class="divider">
+    <div class="how-title">// COMO FUNCIONA</div>
+    <div class="step">
+      <span class="step-num">01</span>
+      <span class="step-txt">Digite um texto e clique em Redigir. Cada letra vira blocos █ com dados ocultos.</span>
+    </div>
+    <div class="step">
+      <span class="step-num">02</span>
+      <span class="step-txt">Cole um texto redigido aqui e clique em Revelar para recuperar o original.</span>
+    </div>
+    <div class="step">
+      <span class="step-num">03</span>
+      <span class="step-txt">Copie o resultado e cole no WhatsApp, e-mail ou onde quiser.</span>
+    </div>
+  </div>
+
+<script>
+  const BLOCK = "█", MS = "▒", ME = "░";
+
+  document.getElementById("input").addEventListener("input", function () {
+    document.getElementById("in-count").textContent = this.value.length + " chars";
+  });
+
+  function setStatus(type, msg) {
+    const colors = { ok: "#00ff41", warn: "#00cc33", err: "#00ff41", idle: "#0d2a0d" };
+    document.getElementById("dot").style.background = colors[type] || "#0d2a0d";
+    const sm = document.getElementById("status-msg");
+    sm.textContent = msg;
+    sm.style.color = type === "idle" ? "#1a4a1a" : "#00ff41";
+  }
+
+  function encode() {
+    const input = document.getElementById("input").value;
+    if (!input.trim()) { setStatus("warn", "Nenhum texto para redigir."); return; }
+    let encoded = MS;
+    for (let i = 0; i < input.length; i++) {
+      const code = input.charCodeAt(i);
+      const digits = String(code).padStart(6, "0");
+      let hidden = "";
+      for (const d of digits) hidden += String.fromCharCode(0xFE00 + parseInt(d));
+      encoded += hidden + BLOCK.repeat(2);
+    }
+    encoded += ME;
+    const out = document.getElementById("output");
+    out.value = encoded;
+    out.className = "out-redacted";
+    document.getElementById("out-label").textContent = "REDIGIDO";
+    document.getElementById("out-label").className = "out-label-red";
+    document.getElementById("out-count").textContent = encoded.length + " chars";
+    document.getElementById("out-section").style.display = "block";
+    const bc = document.getElementById("btn-copy");
+    bc.style.background = "#000"; bc.style.color = "#00ff41"; bc.textContent = "⎘ COPIAR RESULTADO";
+    setStatus("ok", input.length + " caractere(s) ocultado(s) com sucesso.");
+  }
+
+  function decode() {
+    const input = document.getElementById("input").value;
+    if (!input.includes(MS)) { setStatus("err", "Texto inválido. Cole um texto redigido por este programa."); return; }
+    try {
+      const start = input.indexOf(MS), end = input.lastIndexOf(ME);
+      if (start === -1 || end === -1) throw new Error();
+      const raw = input.slice(start + 1, end);
+      let decoded = "", i = 0;
+      while (i < raw.length) {
+        const ch = raw.charCodeAt(i);
+        if (ch >= 0xFE00 && ch <= 0xFE09) {
+          let digits = "", j = i;
+          while (raw.charCodeAt(j) >= 0xFE00 && raw.charCodeAt(j) <= 0xFE09 && digits.length < 6)
+            digits += String(raw.charCodeAt(j++) - 0xFE00);
+          decoded += String.fromCharCode(parseInt(digits, 10));
+          while (j < raw.length && raw[j] === BLOCK) j++;
+          i = j;
+        } else { i++; }
+      }
+      if (!decoded) throw new Error();
+      const out = document.getElementById("output");
+      out.value = decoded;
+      out.className = "out-revealed";
+      document.getElementById("out-label").textContent = "REVELADO";
+      document.getElementById("out-label").className = "out-label-rev";
+      document.getElementById("out-count").textContent = decoded.length + " chars";
+      document.getElementById("out-section").style.display = "block";
+      const bc = document.getElementById("btn-copy");
+      bc.style.background = "#000"; bc.style.color = "#00ff41"; bc.textContent = "⎘ COPIAR RESULTADO";
+      setStatus("ok", decoded.length + " caractere(s) revelado(s).");
+    } catch { setStatus("err", "Falha ao decodificar. Cole o texto redigido completo."); }
+  }
+
+  function copyOutput() {
+    const val = document.getElementById("output").value;
+    if (!val) { setStatus("warn", "Nada para copiar."); return; }
+    navigator.clipboard.writeText(val).then(() => {
+      const bc = document.getElementById("btn-copy");
+      bc.style.background = "#00ff41"; bc.style.color = "#000"; bc.textContent = "✓ COPIADO!";
+      setStatus("ok", "Copiado! Cole em qualquer lugar.");
+      setTimeout(() => { bc.style.background = "#000"; bc.style.color = "#00ff41"; bc.textContent = "⎘ COPIAR RESULTADO"; }, 2000);
+    }).catch(() => setStatus("warn", "Selecione o texto manualmente e copie."));
+  }
+</script>
+
+</body>
+</html>
